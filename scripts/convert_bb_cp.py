@@ -44,7 +44,8 @@ def process_csv(input_file, output_file):
         writer.writeheader()
         writer.writerows(records)
 
-if __name__ == "__main__":
+def main():
+    """Main function to handle command-line arguments."""
     if len(sys.argv) < 3:
         script_name = Path(sys.argv[0]).name
         print(f"Usage: {script_name} <input.csv> <output.csv>")
@@ -53,3 +54,6 @@ if __name__ == "__main__":
         input_file = Path(sys.argv[1])
         output_file = Path(sys.argv[2])
         process_csv(input_file, output_file)
+
+if __name__ == "__main__":
+    main()

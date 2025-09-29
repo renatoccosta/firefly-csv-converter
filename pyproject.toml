@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "firefly-csv-converter"
+version = "0.1.0"
+description = "Tools to convert and clean bank CSVs into Firefly III import format."
+authors = [{ name = "Renato Costa" }]
+readme = "README.md"
+license-files = ["COPYING"]
+dependencies = [
+    "pandas",
+]
+
+[project.scripts]
+convert-bb-cp = "scripts.convert_bb_cp:main"
+
+[tool.setuptools.packages.find]
+include = ["scripts*"]
+exclude = ["tests*", "samples*", "output*"]
