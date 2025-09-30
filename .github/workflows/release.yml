@@ -5,6 +5,9 @@ on:
     tags:
       - "v*.*.*"   # só roda quando uma tag de versão é criada (ex: v0.1.0)
 
+permissions:
+  contents: write   # 🔑 necessário para criar e atualizar releases
+
 jobs:
   build:
     runs-on: ubuntu-latest
