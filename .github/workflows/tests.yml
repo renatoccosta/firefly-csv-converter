@@ -1,23 +1,27 @@
-name: Tests
+name: Run Tests
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.11"]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: '3.11'
+
       - name: Install Poetry
         run: pip install poetry
+
       - name: Install dependencies
-        run: poetry install --with test
+        run: poetry install
+
       - name: Run tests
-        run: pytest -vv
+        run: poetry run pytest -v

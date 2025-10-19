@@ -1,7 +1,7 @@
 import csv
 import pytest
 from pathlib import Path
-from scripts.convert_bb_lc import parse_input
+from src.firefly_csv_converter.convert_bb_lc import parse_input
 
 @pytest.fixture
 def sample_input(tmp_path):
