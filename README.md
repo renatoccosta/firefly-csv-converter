@@ -11,16 +11,15 @@ The project provides customizable conversion scripts that handle recurring text 
 ## Project Structure
 
 ```
-
 firefly-csv-converter/
-├── scripts/        # Source conversion scripts
-├── tests/          # Unit tests (pytest)
-├── samples/        # Example input files
-├── output/         # Generated CSV files (ignored by git)
-├── requirements.txt
-├── README.md
-└── LICENSE
-
+├── src/              # Package modules (conversion logic)
+├── tests/            # Unit tests (pytest)
+├── samples/          # Example input files
+├── output/           # Generated CSV files (ignored by git)
+├── .github/          # CI/workflow configs
+├── pyproject.toml    # Build / packaging configuration
+├── README.md         # This file
+└── COPYING           # License
 ````
 
 ## Installation
@@ -31,26 +30,26 @@ firefly-csv-converter/
    cd firefly-csv-converter
    ```
 
-2. Create and activate a Python virtual environment:
+2. This project uses [Poetry](https://python-poetry.org/) to manage dependencies, build, install. Poetry should be installed with [PipX](https://pipx.pypa.io/stable/). Install PipX and Poetry:
 
    ```bash
-   python3 -m venv venv
-   source venv/bin/activate   # On Linux/macOS
-   venv\Scripts\activate      # On Windows
+   sudo apt update
+   sudo apt install pipx
+   pipx install poetry
    ```
 
-3. Install dependencies:
+3. Build/Install (Poetry takes care of venvs):
 
    ```bash
-   pip install -r requirements.txt
+   poetry build
+   poetry install
    ```
-
 ## Usage
 
 Example converting a Banco do Brasil statement:
 
 ```bash
-python scripts/convert_bb_cp.py samples/bb-cp.csv output/bb-cp-converted.csv
+./convert_bb_cp samples/bb-cp.csv output/bb-cp-converted.csv
 ```
 
 This will:
@@ -66,12 +65,10 @@ Unit tests are written with [pytest](https://docs.pytest.org/).
 To execute all tests:
 
 ```bash
-pytest
+poetry run pytest -v
 ```
 
 ## License
 
 This project is licensed under the GNU General Public License v3.0.
-See the [LICENSE](LICENSE) file for details.
-
-```
+See the [COPYING](COPYING) file for details.
