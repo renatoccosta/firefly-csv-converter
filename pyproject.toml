@@ -11,22 +11,12 @@ dependencies = ["pandas (>=2.3.3,<3.0.0)", "openpyxl (>=3.1.5,<4.0.0)"]
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-#requires = ["setuptools>=61.0", "setuptools-scm"]
-#build-backend = "setuptools.build_meta"
 
 [dependency-groups]
 test = ["pytest", "pytest-cov"]
 
 [project.scripts]
 convert-bb-cp = "src.firefly_csv_converter.convert_bb_cp:main"
-
-#[tool.setuptools.packages.find]
-#include = ["src*"]
-#exclude = ["tests*", "samples*", "output*"]
-
-#[tool.setuptools_scm]
-#version_scheme = "post-release"
-#local_scheme = "no-local-version"
 
 [tool.poetry]
 version = "1.0" # base version
