@@ -34,7 +34,7 @@ def normalize_number(raw_value: str) -> str:
     formatted = f"{value[:-2]},{value[-2:]}"
     return f"-{formatted}" if negative else formatted
 
-def parse_input(input_path):
+def parse_input(input_path: str | Path) -> tuple[list[str], list[list[str]]]:
     """
     Extracts the relevant data from the BB statement text file and writes it to CSV.
     """
@@ -89,7 +89,6 @@ def parse_input(input_path):
 
     return fieldnames, rows
 
-    # Write CSV
 def process_csv(input_file, output_file):
     """Parse and write output CSV."""
     fieldnames, rows = parse_input(input_file)
