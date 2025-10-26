@@ -1,0 +1,62 @@
+<OFX>
+    <SIGNONMSGSRSV1>
+        <SONRS>
+            <STATUS>
+                <CODE>0</CODE>
+                <SEVERITY>INFO</SEVERITY>
+            </STATUS>
+            <DTSERVER>20250921183453</DTSERVER>
+            <LANGUAGE>POR</LANGUAGE>
+            <FI>
+                <ORG>Banco do Brasil</ORG>
+                <FID>1</FID>
+            </FI>
+        </SONRS>
+    </SIGNONMSGSRSV1>
+    <CREDITCARDMSGSRSV1>
+        <CCSTMTTRNRS>
+            <TRNUID>1</TRNUID>
+            <STATUS>
+                <CODE>0</CODE>
+                <SEVERITY>INFO</SEVERITY>
+            </STATUS>
+            <CCSTMTRS>
+                <CURDEF>BRL</CURDEF>
+                <CCACCTFROM>
+                    <ACCTID>
+12341234123412341234
+                    </ACCTID>
+                </CCACCTFROM>
+                <BANKTRANLIST>
+                    <DTSTART>20240714</DTSTART>
+                    <DTEND>20250324</DTEND>
+                    <STMTTRN>
+                        <TRNTYPE>CREDIT</TRNTYPE>
+                        <DTPOSTED>20250305</DTPOSTED>
+                        <TRNAMT>27.90</TRNAMT>
+                        <FITID>12341234123412341234123412341234</FITID>
+                        <MEMO>PGTO DEBITO CONTA 1234 000007027  200211</MEMO>
+                    </STMTTRN>
+                    <STMTTRN>
+                        <TRNTYPE>PAYMENT</TRNTYPE>
+                        <DTPOSTED>20250324</DTPOSTED>
+                        <TRNAMT>-3.00</TRNAMT>
+                        <FITID>1241234123412341234</FITID>
+                        <MEMO>PROTECAO OURO ABR/2025               BR</MEMO>
+                    </STMTTRN>
+                    <STMTTRN>
+                        <TRNTYPE>PAYMENT</TRNTYPE>
+                        <DTPOSTED>20240714</DTPOSTED>
+                        <TRNAMT>-24.90</TRNAMT>
+                        <FITID>1234123412341234</FITID>
+                        <MEMO>PAG* PARC 09/12 Bauru       BR</MEMO>
+                    </STMTTRN>
+                </BANKTRANLIST>
+                <LEDGERBAL>
+                    <BALAMT>-27.90</BALAMT>
+                    <DTASOF>20250405</DTASOF>
+                </LEDGERBAL>
+            </CCSTMTRS>
+        </CCSTMTTRNRS>
+    </CREDITCARDMSGSRSV1>
+</OFX>

@@ -6,7 +6,7 @@ authors = [{ name = "Renato Costa", email = "renato@ccosta.dev" }]
 readme = "README.md"
 license-files = ["COPYING"]
 requires-python = ">=3.11"
-dependencies = ["pandas (>=2.3.3,<3.0.0)", "openpyxl (>=3.1.5,<4.0.0)"]
+dependencies = ["pandas (>=2.3.3,<3.0.0)", "openpyxl (>=3.1.5,<4.0.0)", "ofxparse (>=0.21,<0.22)"]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -17,6 +17,9 @@ test = ["pytest", "pytest-cov"]
 
 [project.scripts]
 convert-bb-cp = "src.firefly_csv_converter.convert_bb_cp:main"
+convert-bb-lc = "src.firefly_csv_converter.convert_bb_lc:main"
+convert-ourocard-ofx = "src.firefly_csv_converter.convert_ourocard_ofx:main"
+convert-rico-cc = "src.firefly_csv_converter.convert_rico_cc:main"
 
 [tool.poetry]
 version = "1.0" # base version
