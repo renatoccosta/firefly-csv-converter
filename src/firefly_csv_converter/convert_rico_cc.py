@@ -84,12 +84,9 @@ def main():
         print(f"Usage: {script_name} <input.csv> <output.csv>")
         sys.exit(1)
     else:
-        # Input and output file paths
-        input_file = "samples/rico-cc.xlsx"
-        output_file = "output/rico-cc.csv"
+        input_file = Path(sys.argv[1])
+        output_file = Path(sys.argv[2])
 
-        # input_file = Path(sys.argv[1])
-        # output_file = Path(sys.argv[2])
         process_csv(input_file, output_file)
 
 if __name__ == "__main__":
