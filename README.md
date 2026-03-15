@@ -7,6 +7,7 @@ The project provides customizable conversion scripts that handle recurring text 
 - Column cleaning and restructuring
 - Splitting value and credit/debit markers
 - Generating valid CSV output for Firefly III
+- Extracting PicPay statement transactions from text-based PDFs and generating OFX
 
 ## Project Structure
 
