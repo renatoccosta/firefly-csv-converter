@@ -10,6 +10,7 @@ class StatementTransaction:
     memo: str
     amount: Decimal
     balance: Decimal | None
+    name: str | None = None
 
 
 @dataclass(frozen=True)
@@ -73,7 +74,7 @@ def build_ofx(statement: StatementData) -> str:
                     f"<DTPOSTED>{format_ofx_timestamp(transaction.posted_at)}",
                     f"<TRNAMT>{transaction.amount:.2f}",
                     f"<FITID>{fit_id(transaction)}",
-                    f"<NAME>{transaction.memo}",
+                    f"<NAME>{transaction.name or transaction.memo}",
                     f"<MEMO>{transaction.memo}",
                     "</STMTTRN>",
                 ]

@@ -8,6 +8,7 @@ The project provides customizable conversion scripts that handle recurring text 
 - Splitting value and credit/debit markers
 - Generating valid CSV output for Firefly III
 - Extracting PicPay statement transactions from text-based PDFs and generating OFX
+- Extracting VR statement transactions from text-based PDFs and generating OFX
 
 ## Project Structure
 
@@ -59,6 +60,24 @@ This will:
 * Clean and restructure the `Value` column
 * Add a `Type` column for `C` (credit) or `D` (debit)
 * Save the processed file in `output/`
+
+Example converting a PicPay PDF statement in the 2022-2024 layout to OFX:
+
+```bash
+poetry run convert-picpay-pdf-ofx-2024 samples-local/picpay/2022-2024/2024.pdf output/picpay-2024.ofx
+```
+
+Example converting a PicPay PDF statement in the 2025 layout to OFX:
+
+```bash
+poetry run convert-picpay-pdf-ofx-2025 samples-local/picpay/2025-x/2025.pdf output/picpay-2025.ofx
+```
+
+Example converting a VR PDF statement to OFX:
+
+```bash
+poetry run convert-vr-pdf-ofx samples-local/vr/2024.pdf output/vr-2024.ofx
+```
 
 ## Running Tests
 

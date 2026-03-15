@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
-from firefly_csv_converter._picpay_ofx_common import (
+from firefly_csv_converter._ofx_common import (
     StatementData,
     StatementTransaction,
     build_ofx,
