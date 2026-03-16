@@ -9,6 +9,7 @@ from firefly_csv_converter._ofx_common import StatementData, StatementTransactio
 
 
 DATETIME_PATTERN = re.compile(r"^\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2}$")
+DATE_ONLY_PATTERN = re.compile(r"^\d{2}/\d{2}/\d{2}$")
 
 
 def unescape_pdf_string(raw: bytes) -> bytes:
@@ -69,7 +70,14 @@ def extract_text_elements(pdf_bytes: bytes) -> list[list[tuple[float, float, str
                     )
                 )
 
-        if any(text == "DATA_HORA" for _, _, text in page_elements):
+        has_transaction_rows = any(
+            DATETIME_PATTERN.match(text) or DATE_ONLY_PATTERN.match(text) for _, _, text in page_elements
+        )
+        has_vr_markers = any(
+            text in {"DATA_HORA", "OPERACAO", "VALOR"} or "Consumo Confirmado" in text or "Disponibilização" in text
+            for _, _, text in page_elements
+        )
+        if has_transaction_rows and has_vr_markers:
             pages.append(page_elements)
 
     return pages
@@ -80,6 +88,14 @@ def parse_amount(value_text: str, operation_text: str) -> Decimal:
     if "disponibiliza" in operation_text.lower():
         return value
     return -value
+
+
+def parse_posted_at(value: str) -> datetime:
+    if DATETIME_PATTERN.match(value):
+        return datetime.strptime(value, "%d/%m/%Y %H:%M:%S")
+    if DATE_ONLY_PATTERN.match(value):
+        return datetime.strptime(value, "%d/%m/%y")
+    raise ValueError(f"Data/Hora não reconhecida no PDF da VR: {value}")
 
 
 def extract_metadata(first_page: list[tuple[float, float, str]]) -> tuple[str, str | None]:
@@ -112,7 +128,14 @@ def parse_transactions(pages: list[list[tuple[float, float, str]]]) -> list[Stat
                 continue
 
             row = {x: text for x, text in cells}
-            datetime_text = next((text for x, text in cells if x < 120 and DATETIME_PATTERN.match(text)), None)
+            datetime_text = next(
+                (
+                    text
+                    for x, text in cells
+                    if x < 120 and (DATETIME_PATTERN.match(text) or DATE_ONLY_PATTERN.match(text))
+                ),
+                None,
+            )
             if not datetime_text:
                 continue
 
@@ -131,7 +154,7 @@ def parse_transactions(pages: list[list[tuple[float, float, str]]]) -> list[Stat
 
             transactions.append(
                 StatementTransaction(
-                    posted_at=datetime.strptime(datetime_text, "%d/%m/%Y %H:%M:%S"),
+                    posted_at=parse_posted_at(datetime_text),
                     memo=operation_text,
                     amount=parse_amount(amount_text, operation_text),
                     balance=None,
