@@ -10,7 +10,7 @@
 - `src/firefly_csv_converter/convert_bb_cp.py`: converts Banco do Brasil checking account CSV exports.
 - `src/firefly_csv_converter/convert_bb_lc.py`: extracts BB LC/LCI/LCA statement rows from plain text.
 - `src/firefly_csv_converter/convert_ourocard_ofx.py`: converts Ourocard OFX files using `ofxparse`.
-- `src/firefly_csv_converter/convert_rico_cc.py`: converts Rico account spreadsheets using `pandas` and `openpyxl`.
+- `src/firefly_csv_converter/convert_rico_xlsx_csv.py`: converts Rico account spreadsheets using `pandas` and `openpyxl`.
 - `tests/`: pytest coverage for each converter, mostly focused on parser behavior and output formatting.
 - `samples/`: real example inputs used by tests and useful for manual verification.
 
@@ -41,7 +41,7 @@
   - `poetry run pytest tests/test_convert_bb_cp.py -v`
   - `poetry run pytest tests/test_convert_bb_lcilca.py -v`
   - `poetry run pytest tests/test_convert_ourocard_ofx.py -v`
-  - `poetry run pytest tests/test_convert_rico_cc.py -v`
+  - `poetry run pytest tests/test_convert_rico_xlsx_csv.py -v`
 - Then run the full suite.
 - Full suite command: `poetry run pytest -v`
 - Use files in `samples/` for manual spot checks before introducing new fixtures unless the scenario cannot be represented by the existing samples.
@@ -56,7 +56,7 @@
   - `convert-bb-cp`
   - `convert-bb-lc`
   - `convert-ourocard-ofx`
-  - `convert-rico-cc`
+  - `convert-rico-xlsx-csv`
 - Each CLI currently expects exactly two positional arguments: input path and output path.
 - Prefer running entry points through Poetry during development, for example `poetry run convert-bb-cp ...`.
 - If you change CLI behavior, update both `README.md` and the relevant tests.
