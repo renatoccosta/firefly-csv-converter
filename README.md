@@ -79,6 +79,12 @@ Example converting a VR PDF statement to OFX:
 poetry run convert-vr-pdf-ofx samples-local/vr/2024.pdf output/vr-2024.ofx
 ```
 
+Example converting an iFood PDF statement to OFX:
+
+```bash
+poetry run convert-ifood-pdf-ofx samples-local/ifood/extrato.pdf output/ifood.ofx
+```
+
 ## Running Tests
 
 Unit tests are written with [pytest](https://docs.pytest.org/).
