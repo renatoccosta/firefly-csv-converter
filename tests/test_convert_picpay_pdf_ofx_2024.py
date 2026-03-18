@@ -30,7 +30,7 @@ def test_parse_pdf_extracts_transactions_and_metadata(tmp_path: Path):
     pdf_bytes = make_pdf_like_bytes(
         [
             (493.230, 719.850, "Conta:"),
-            (529.520, 719.850, "14339269"),
+            (529.520, 719.850, "99990001"),
             (266.052, 642.958, "1 DE JANEIRO DE 2024 A 31 DE DEZEMBRO DE 2024"),
             (421.928, -0.568, "Extrato gerado em 11/03/2026 às 17:47:35"),
             (17.000, 642.958, "MOVIMENTAÇÕES"),
@@ -58,7 +58,7 @@ def test_parse_pdf_extracts_transactions_and_metadata(tmp_path: Path):
 
     statement = parse_pdf(input_path)
 
-    assert statement.account_id == "14339269"
+    assert statement.account_id == "99990001"
     assert statement.start_date.strftime("%Y-%m-%d") == "2024-01-01"
     assert statement.end_date.strftime("%Y-%m-%d") == "2024-12-31"
     assert statement.generated_at.strftime("%Y-%m-%d %H:%M:%S") == "2026-03-11 17:47:35"
@@ -80,7 +80,7 @@ def test_process_pdf_generates_ofx_file(tmp_path: Path):
     pdf_bytes = make_pdf_like_bytes(
         [
             (493.230, 719.850, "Conta:"),
-            (529.520, 719.850, "14339269"),
+            (529.520, 719.850, "99990001"),
             (266.052, 642.958, "1 DE JANEIRO DE 2023 A 31 DE DEZEMBRO DE 2023"),
             (421.928, -0.568, "Extrato gerado em 14/01/2024 às 00:37:29"),
             (17.000, 642.958, "MOVIMENTAÇÕES"),
@@ -112,7 +112,7 @@ def test_process_pdf_generates_ofx_file(tmp_path: Path):
     content = output_path.read_text(encoding="utf-8")
 
     assert "<BANKID>PICPAY" in content
-    assert "<ACCTID>14339269" in content
+    assert "<ACCTID>99990001" in content
     assert "<CURDEF>BRL" in content
     assert "<TRNTYPE>CREDIT" in content
     assert "<TRNTYPE>DEBIT" in content
@@ -126,7 +126,7 @@ def test_process_pdf_generates_ofx_file(tmp_path: Path):
 def test_build_ofx_handles_empty_transactions():
     content = build_ofx(
         StatementData(
-            account_id="14339269",
+            account_id="99990001",
             account_type="CHECKING",
             bank_id="PICPAY",
             currency="BRL",

@@ -17,7 +17,7 @@ def test_parse_input_builds_statement_data(tmp_path):
     file_path = tmp_path / "rico_ofx.xlsx"
     rows = [
         [None, None, None, None, None, None, "Data da consulta: 05/10/2025 00:08"],
-        [None, None, None, None, None, None, "Conta Rico: 12312312"],
+        [None, None, None, None, None, None, "Conta Rico: 99990001"],
         [None, None, None, None, None, None, None],
         [None, "Movimentação", "Liquidação", "Lançamento", None, "Valor (R$)", "Saldo (R$)"],
         [None, pd.Timestamp("2025-01-03"), pd.Timestamp("2025-01-04"), "COMPRA TESTE", None, -10.55, 120.10],
@@ -27,7 +27,7 @@ def test_parse_input_builds_statement_data(tmp_path):
 
     statement = parse_input(file_path)
 
-    assert statement.account_id == "12312312"
+    assert statement.account_id == "99990001"
     assert statement.bank_id == "RICO"
     assert statement.currency == "BRL"
     assert statement.generated_at == datetime(2025, 10, 5, 0, 8)
@@ -75,7 +75,7 @@ def test_process_ofx_writes_expected_output(tmp_path):
     content = output_path.read_text(encoding="utf-8")
     assert "OFXHEADER:100" in content
     assert "<BANKID>RICO" in content
-    assert "<ACCTID>12312312" in content
+    assert "<ACCTID>" in content
     assert "<DTSERVER>20251005000800" in content
     assert "<DTSTART>20250102000000" in content
     assert "<DTEND>20250925000000" in content

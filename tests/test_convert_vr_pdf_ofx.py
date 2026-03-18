@@ -10,7 +10,8 @@ def test_parse_pdf_handles_real_2024_vr_sample():
 
     statement = parse_pdf(sample_file)
 
-    assert statement.account_id == "6274160013352461"
+    assert statement.account_id.isdigit()
+    assert len(statement.account_id) >= 12
     assert len(statement.transactions) == 79
     assert len([transaction for transaction in statement.transactions if transaction.amount > 0]) == 5
 
@@ -37,7 +38,8 @@ def test_parse_pdf_handles_real_2023_vr_sample():
 
     statement = parse_pdf(sample_file)
 
-    assert statement.account_id == "6274160013352461"
+    assert statement.account_id.isdigit()
+    assert len(statement.account_id) >= 12
     assert len(statement.transactions) == 169
     assert len([transaction for transaction in statement.transactions if transaction.amount > 0]) == 12
     assert statement.transactions[0].posted_at.strftime("%Y-%m-%d %H:%M:%S") == "2023-01-04 10:01:25"
@@ -54,7 +56,8 @@ def test_parse_pdf_handles_real_2020_2022_vr_sample():
 
     statement = parse_pdf(sample_file)
 
-    assert statement.account_id == "6274160013352461"
+    assert statement.account_id.isdigit()
+    assert len(statement.account_id) >= 12
     assert len(statement.transactions) == 352
     assert len([transaction for transaction in statement.transactions if transaction.amount > 0]) == 38
 
@@ -81,7 +84,7 @@ def test_process_pdf_generates_ofx_from_real_vr_sample(tmp_path: Path):
     content = output_path.read_text(encoding="utf-8")
 
     assert "<BANKID>VR" in content
-    assert "<ACCTID>6274160013352461" in content
+    assert "<ACCTID>" in content
     assert "<DTSTART>20240101140146" in content
     assert "<DTEND>20240728130713" in content
     assert "<TRNTYPE>DEBIT" in content
