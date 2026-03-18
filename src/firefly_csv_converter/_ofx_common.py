@@ -137,3 +137,85 @@ def build_ofx(statement: StatementData) -> str:
             "",
         ]
     )
+
+
+def build_credit_card_ofx(statement: StatementData, balance_as_of: datetime) -> str:
+    if statement.transactions:
+        start = min(transaction.posted_at for transaction in statement.transactions)
+        end = max(transaction.posted_at for transaction in statement.transactions)
+        ledger_balance = sum((transaction.amount for transaction in statement.transactions), Decimal("0.00"))
+    else:
+        start = statement.start_date or datetime.now()
+        end = statement.end_date or start
+        ledger_balance = Decimal("0.00")
+
+    transaction_blocks = []
+    for transaction in statement.transactions:
+        transaction_blocks.append(
+            "\n".join(
+                [
+                    "<STMTTRN>",
+                    f"<TRNTYPE>{transaction_type(transaction.amount)}",
+                    f"<DTPOSTED>{format_ofx_timestamp(transaction.posted_at)}",
+                    f"<TRNAMT>{transaction.amount:.2f}",
+                    f"<FITID>{fit_id(transaction)}",
+                    f"<NAME>{transaction.name or transaction.memo}",
+                    f"<MEMO>{transaction.memo}",
+                    "</STMTTRN>",
+                ]
+            )
+        )
+
+    generated_at = statement.generated_at or datetime.now()
+
+    return "\n".join(
+        [
+            "OFXHEADER:100",
+            "DATA:OFXSGML",
+            "VERSION:102",
+            "SECURITY:NONE",
+            "ENCODING:USASCII",
+            "CHARSET:1252",
+            "COMPRESSION:NONE",
+            "OLDFILEUID:NONE",
+            "NEWFILEUID:NONE",
+            "",
+            "<OFX>",
+            "<SIGNONMSGSRSV1>",
+            "<SONRS>",
+            "<STATUS>",
+            "<CODE>0",
+            "<SEVERITY>INFO",
+            "</STATUS>",
+            f"<DTSERVER>{format_ofx_timestamp(generated_at)}",
+            "<LANGUAGE>POR",
+            "</SONRS>",
+            "</SIGNONMSGSRSV1>",
+            "<CREDITCARDMSGSRSV1>",
+            "<CCSTMTTRNRS>",
+            "<TRNUID>1",
+            "<STATUS>",
+            "<CODE>0",
+            "<SEVERITY>INFO",
+            "</STATUS>",
+            "<CCSTMTRS>",
+            "<CURDEF>BRL",
+            "<CCACCTFROM>",
+            f"<ACCTID>{statement.account_id}",
+            "</CCACCTFROM>",
+            "<BANKTRANLIST>",
+            f"<DTSTART>{format_ofx_timestamp(start)}",
+            f"<DTEND>{format_ofx_timestamp(end)}",
+            *transaction_blocks,
+            "</BANKTRANLIST>",
+            "<LEDGERBAL>",
+            f"<BALAMT>{ledger_balance:.2f}",
+            f"<DTASOF>{format_ofx_timestamp(balance_as_of)}",
+            "</LEDGERBAL>",
+            "</CCSTMTRS>",
+            "</CCSTMTTRNRS>",
+            "</CREDITCARDMSGSRSV1>",
+            "</OFX>",
+            "",
+        ]
+    )

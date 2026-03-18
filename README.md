@@ -9,6 +9,7 @@ The project provides customizable conversion scripts that handle recurring text 
 - Generating valid CSV output for Firefly III
 - Extracting PicPay statement transactions from text-based PDFs and generating OFX
 - Extracting VR statement transactions from text-based PDFs and generating OFX
+- Converting C6 credit card CSV invoices into OFX credit card statements
 
 ## Project Structure
 
