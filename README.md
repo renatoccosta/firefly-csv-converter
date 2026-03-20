@@ -86,6 +86,18 @@ Example converting an iFood PDF statement to OFX:
 poetry run convert-ifood-pdf-ofx samples-local/ifood/extrato.pdf output/ifood.ofx
 ```
 
+Example converting a C6 credit card CSV invoice to OFX:
+
+```bash
+poetry run convert-c6-credit-csv-ofx samples-local/c6/credit/Fatura_2021-04-05.csv output/c6-credit.ofx --due-date 2021-04-05
+```
+
+Example converting a C6 credit card PDF invoice to OFX:
+
+```bash
+poetry run convert-c6-credit-pdf-ofx samples-local/c6/credit/2024-04.pdf output/c6-credit-pdf.ofx
+```
+
 ## Running Tests
 
 Unit tests are written with [pytest](https://docs.pytest.org/).
