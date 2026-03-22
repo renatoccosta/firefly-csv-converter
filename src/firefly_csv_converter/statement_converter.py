@@ -62,10 +62,10 @@ def _run_single_conversion(converter: ConverterSpec, args: argparse.Namespace, i
 
 def execute_conversion(converter: ConverterSpec, args: argparse.Namespace) -> int:
     if args.input_path.is_dir():
-        input_files = _collect_input_files(args.input_path, args.input_format)
+        input_files = _collect_input_files(args.input_path, converter.input_format)
         if not input_files:
             print(
-                f"Nenhum arquivo {_format_suffix(args.input_format)} foi encontrado em {args.input_path}.",
+                f"Nenhum arquivo {_format_suffix(converter.input_format)} foi encontrado em {args.input_path}.",
                 file=sys.stderr,
             )
             return 1
@@ -73,7 +73,7 @@ def execute_conversion(converter: ConverterSpec, args: argparse.Namespace) -> in
         success_count = 0
         failure_count = 0
         for input_file in input_files:
-            output_file = _resolve_output_file(input_file, args.output_path, args.output_format, batch_mode=True)
+            output_file = _resolve_output_file(input_file, args.output_path, converter.output_format, batch_mode=True)
             try:
                 _run_single_conversion(converter, args, input_file, output_file)
                 success_count += 1
@@ -84,7 +84,7 @@ def execute_conversion(converter: ConverterSpec, args: argparse.Namespace) -> in
         print(f"Conversao em lote concluida: {success_count} sucesso(s), {failure_count} falha(s).")
         return 0 if failure_count == 0 else 1
 
-    output_file = _resolve_output_file(args.input_path, args.output_path, args.output_format, batch_mode=False)
+    output_file = _resolve_output_file(args.input_path, args.output_path, converter.output_format, batch_mode=False)
     try:
         _run_single_conversion(converter, args, args.input_path, output_file)
     except Exception as exc:
@@ -101,7 +101,7 @@ def build_argument_parser(converter_registry: ConverterRegistry = registry) -> a
         description="Converte extratos e faturas usando um unico ponto de entrada.",
         epilog=(
             "Exemplo:\n"
-            "  statement-converter --in pdf --out ofx --model picpay entrada.pdf saida.ofx\n\n"
+            "  statement-converter --model picpay entrada.pdf saida.ofx\n\n"
             "Conversores disponiveis:\n"
             f"{_available_combinations(converter_registry)}"
         ),
@@ -109,9 +109,7 @@ def build_argument_parser(converter_registry: ConverterRegistry = registry) -> a
     )
     parser.add_argument("input_path", type=Path, nargs="?")
     parser.add_argument("output_path", type=Path, nargs="?")
-    parser.add_argument("--in", dest="input_format", help="Formato de entrada, por exemplo: csv, pdf, txt, xlsx, ofx.")
-    parser.add_argument("--out", dest="output_format", help="Formato de saida, por exemplo: csv ou ofx.")
-    parser.add_argument("--model", help="Modelo/instituicao do conversor, por exemplo: picpay, pb, rico, c6-credit.")
+    parser.add_argument("--model", help="Modelo/instituicao do conversor, por exemplo: picpay, pb, rico-ofx, c6-credit-csv.")
     parser.add_argument(
         "--due-date",
         dest="due_date",
@@ -125,17 +123,16 @@ def validate_args(
     args: argparse.Namespace,
     converter_registry: ConverterRegistry = registry,
 ) -> ConverterSpec:
-    if not args.input_format or not args.output_format or not args.model or not args.input_path or not args.output_path:
+    if not args.model or not args.input_path or not args.output_path:
         parser.error(
-            "os parametros --in, --out, --model, input_path e output_path sao obrigatorios para executar uma conversao"
+            "os parametros --model, input_path e output_path sao obrigatorios para executar uma conversao"
         )
 
-    converter = converter_registry.find(args.input_format, args.output_format, args.model)
+    converter = converter_registry.find_by_model(args.model)
     if converter is None:
         parser.error(
-            "nenhum conversor foi encontrado para a combinacao "
-            f"--in {args.input_format} --out {args.output_format} --model {args.model}.\n\n"
-            "Use --help para ver as combinacoes suportadas."
+            f"nenhum conversor foi encontrado para o modelo {args.model}.\n\n"
+            "Use --help para ver os modelos suportados."
         )
 
     if not args.input_path.exists():

@@ -36,8 +36,9 @@ def register_converters(registry):
     registry.register(
         input_format="xlsx",
         output_format="csv",
-        model="rico",
+        model="rico-csv",
         description="Rico XLSX para CSV",
+        aliases=("rico-xlsx-csv",),
     )(_run)
 
 if __name__ == "__main__":

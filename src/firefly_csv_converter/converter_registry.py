@@ -22,12 +22,7 @@ class ConverterSpec:
     aliases: tuple[str, ...] = ()
     required_options: tuple[str, ...] = ()
 
-    def matches(self, input_format: str, output_format: str, model: str) -> bool:
-        if self.input_format != normalize_token(input_format):
-            return False
-        if self.output_format != normalize_token(output_format):
-            return False
-
+    def matches_model(self, model: str) -> bool:
         accepted_models = {self.model, *self.aliases}
         return normalize_token(model) in accepted_models
 
@@ -57,17 +52,27 @@ class ConverterRegistry:
                 aliases=tuple(normalize_token(alias) for alias in aliases),
                 required_options=required_options,
             )
+            self._ensure_unique_models(spec)
             self._converters.append(spec)
             return handler
 
         return decorator
 
+    def _ensure_unique_models(self, new_spec: ConverterSpec) -> None:
+        new_tokens = {new_spec.model, *new_spec.aliases}
+        for spec in self._converters:
+            existing_tokens = {spec.model, *spec.aliases}
+            overlap = new_tokens & existing_tokens
+            if overlap:
+                repeated = ", ".join(sorted(overlap))
+                raise ValueError(f"Modelos/aliases duplicados no registro de conversores: {repeated}")
+
     def all(self) -> tuple[ConverterSpec, ...]:
         return tuple(self._converters)
 
-    def find(self, input_format: str, output_format: str, model: str) -> ConverterSpec | None:
+    def find_by_model(self, model: str) -> ConverterSpec | None:
         for spec in self._converters:
-            if spec.matches(input_format, output_format, model):
+            if spec.matches_model(model):
                 return spec
         return None
 

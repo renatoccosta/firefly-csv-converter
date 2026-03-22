@@ -123,9 +123,9 @@ def register_converters(registry) -> None:
     registry.register(
         input_format="csv",
         output_format="ofx",
-        model="c6-credit",
+        model="c6-credit-csv",
         description="C6 cartao de credito CSV para OFX",
-        aliases=("c6",),
+        aliases=("c6-csv",),
         required_options=("due_date",),
     )(_run)
 

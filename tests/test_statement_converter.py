@@ -34,7 +34,7 @@ def test_main_routes_to_matching_converter(tmp_path: Path):
     input_path.write_text("fake", encoding="utf-8")
 
     exit_code = statement_converter.main(
-        ["--in", "pdf", "--out", "ofx", "--model", "picpay", str(input_path), str(output_path)],
+        ["--model", "picpay", str(input_path), str(output_path)],
         converter_registry=test_registry,
     )
 
@@ -61,7 +61,7 @@ def test_main_accepts_output_directory_for_single_file(tmp_path: Path):
     input_path.write_text("fake", encoding="utf-8")
 
     exit_code = statement_converter.main(
-        ["--in", "pdf", "--out", "ofx", "--model", "vr", str(input_path), str(output_dir)],
+        ["--model", "vr", str(input_path), str(output_dir)],
         converter_registry=test_registry,
     )
 
@@ -74,18 +74,18 @@ def test_main_accepts_output_directory_for_single_file(tmp_path: Path):
 def test_main_reports_unknown_converter(capsys: pytest.CaptureFixture[str]):
     with pytest.raises(SystemExit) as excinfo:
         statement_converter.main(
-            ["--in", "pdf", "--out", "csv", "--model", "picpay", "entrada.pdf", "saida.csv"]
+            ["--model", "desconhecido", "entrada.pdf", "saida.csv"]
         )
 
     captured = capsys.readouterr()
     assert excinfo.value.code == 2
-    assert "nenhum conversor foi encontrado" in captured.err
+    assert "nenhum conversor foi encontrado para o modelo desconhecido" in captured.err
 
 
 def test_main_requires_due_date_for_c6_csv(capsys: pytest.CaptureFixture[str]):
     with pytest.raises(SystemExit) as excinfo:
         statement_converter.main(
-            ["--in", "csv", "--out", "ofx", "--model", "c6", "fatura.csv", "fatura.ofx"]
+            ["--model", "c6-credit-csv", "fatura.csv", "fatura.ofx"]
         )
 
     captured = capsys.readouterr()
@@ -112,7 +112,7 @@ def test_process_picpay_auto_falls_back_to_2024(monkeypatch: pytest.MonkeyPatch,
     input_path.write_text("fake pdf", encoding="utf-8")
 
     args = statement_converter.build_argument_parser().parse_args(
-        ["--in", "pdf", "--out", "ofx", "--model", "picpay", str(input_path), str(output_path)]
+        ["--model", "picpay", str(input_path), str(output_path)]
     )
     picpay_auto_converter.process_pdf(args.input_path, args.output_path)
 
@@ -147,7 +147,7 @@ def test_main_processes_directory_and_continues_after_failures(
     (input_dir / "ignorar.txt").write_text("ignorar", encoding="utf-8")
 
     exit_code = statement_converter.main(
-        ["--in", "pdf", "--out", "ofx", "--model", "vr", str(input_dir), str(output_dir)],
+        ["--model", "vr", str(input_dir), str(output_dir)],
         converter_registry=test_registry,
     )
 

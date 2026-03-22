@@ -66,8 +66,9 @@ def register_converters(registry) -> None:
     registry.register(
         input_format="xlsx",
         output_format="ofx",
-        model="rico",
+        model="rico-ofx",
         description="Rico XLSX para OFX",
+        aliases=("rico-xlsx-ofx",),
     )(_run)
 
 

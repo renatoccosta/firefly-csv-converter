@@ -379,9 +379,9 @@ def register_converters(registry) -> None:
     registry.register(
         input_format="pdf",
         output_format="ofx",
-        model="c6-credit",
+        model="c6-credit-pdf",
         description="C6 cartao de credito PDF para OFX",
-        aliases=("c6",),
+        aliases=("c6-pdf",),
     )(_run)
 
 

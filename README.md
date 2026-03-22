@@ -95,23 +95,29 @@ If you install with `pip --user`, make sure your user scripts directory, usually
 Unified CLI entry point:
 
 ```bash
-statement-converter --in pdf --out ofx --model picpay samples-local/picpay/2025-x/2025.pdf output/picpay.ofx
+statement-converter --model picpay samples-local/picpay/2025-x/2025.pdf output/picpay.ofx
 ```
 
 The unified command accepts:
-- `--in`: input format
-- `--out`: output format
 - `--model`: institution/model identifier
 - `input_path`: source file
 - `output_path`: destination file
 
+The input and output formats are inferred from the selected model.
+
 Some converters may require extra options. Example for C6 credit card CSV:
 
 ```bash
-statement-converter --in csv --out ofx --model c6-credit --due-date 2021-04-05 samples-local/c6/credit/Fatura_2021-04-05.csv output/c6-credit.ofx
+statement-converter --model c6-credit-csv --due-date 2021-04-05 samples-local/c6/credit/Fatura_2021-04-05.csv output/c6-credit.ofx
 ```
 
-Run `statement-converter --help` to see the supported combinations.
+Example processing a full directory:
+
+```bash
+statement-converter --model vr samples/vr output
+```
+
+Run `statement-converter --help` to see the supported models.
 
 Example converting a Banco do Brasil statement:
 
