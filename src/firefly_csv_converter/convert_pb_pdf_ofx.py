@@ -184,5 +184,18 @@ def main() -> None:
     process_pdf(args.input_path, args.output_path)
 
 
+def _run(args: argparse.Namespace) -> None:
+    process_pdf(args.input_path, args.output_path)
+
+
+def register_converters(registry) -> None:
+    registry.register(
+        input_format="pdf",
+        output_format="ofx",
+        model="pb",
+        description="PB contracheque PDF para OFX",
+    )(_run)
+
+
 if __name__ == "__main__":
     main()

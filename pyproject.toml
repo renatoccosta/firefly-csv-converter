@@ -16,6 +16,7 @@ build-backend = "poetry.core.masonry.api"
 test = ["pytest", "pytest-cov"]
 
 [project.scripts]
+statement-converter = "firefly_csv_converter.statement_converter:main"
 convert-bb-cp = "firefly_csv_converter.convert_bb_cp:main"
 convert-bb-lc = "firefly_csv_converter.convert_bb_lc:main"
 convert-c6-credit-csv-ofx = "firefly_csv_converter.convert_c6_credit_csv_ofx:main"

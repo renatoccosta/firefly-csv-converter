@@ -1,3 +1,4 @@
+import argparse
 import re
 import sys
 from datetime import datetime
@@ -112,6 +113,19 @@ def main() -> None:
         sys.exit(1)
 
     process_pdf(Path(sys.argv[1]), Path(sys.argv[2]))
+
+
+def _run(args: argparse.Namespace) -> None:
+    process_pdf(args.input_path, args.output_path)
+
+
+def register_converters(registry) -> None:
+    registry.register(
+        input_format="pdf",
+        output_format="ofx",
+        model="ifood",
+        description="iFood PDF para OFX",
+    )(_run)
 
 
 if __name__ == "__main__":

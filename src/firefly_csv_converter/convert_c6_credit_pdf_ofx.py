@@ -371,5 +371,19 @@ def main() -> None:
     process_pdf(args.input_path, args.output_path)
 
 
+def _run(args: argparse.Namespace) -> None:
+    process_pdf(args.input_path, args.output_path)
+
+
+def register_converters(registry) -> None:
+    registry.register(
+        input_format="pdf",
+        output_format="ofx",
+        model="c6-credit",
+        description="C6 cartao de credito PDF para OFX",
+        aliases=("c6",),
+    )(_run)
+
+
 if __name__ == "__main__":
     main()

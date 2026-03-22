@@ -64,5 +64,18 @@ def main():
         process_csv(input_file, output_file)
 
 
+def _run(args):
+    process_csv(args.input_path, args.output_path)
+
+
+def register_converters(registry):
+    registry.register(
+        input_format="ofx",
+        output_format="csv",
+        model="ourocard",
+        description="Ourocard OFX para CSV",
+    )(_run)
+
+
 if __name__ == "__main__":
     main()

@@ -1,3 +1,4 @@
+import argparse
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -55,6 +56,19 @@ def main() -> None:
         sys.exit(1)
 
     process_ofx(Path(sys.argv[1]), Path(sys.argv[2]))
+
+
+def _run(args: argparse.Namespace) -> None:
+    process_ofx(args.input_path, args.output_path)
+
+
+def register_converters(registry) -> None:
+    registry.register(
+        input_format="xlsx",
+        output_format="ofx",
+        model="rico",
+        description="Rico XLSX para OFX",
+    )(_run)
 
 
 if __name__ == "__main__":

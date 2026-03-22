@@ -112,5 +112,19 @@ def main():
         output_file = Path(sys.argv[2])
         process_csv(input_file, output_file)
 
+
+def _run(args):
+    process_csv(args.input_path, args.output_path)
+
+
+def register_converters(registry):
+    registry.register(
+        input_format="txt",
+        output_format="csv",
+        model="bb-lc",
+        description="Banco do Brasil LC/LCI/LCA",
+        aliases=("bb-lci-lca", "bb-lcilca"),
+    )(_run)
+
 if __name__ == "__main__":
     main()

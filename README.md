@@ -50,10 +50,31 @@ firefly-csv-converter/
    ```
 ## Usage
 
+Unified CLI entry point:
+
+```bash
+poetry run statement-converter --in pdf --out ofx --model picpay samples-local/picpay/2025-x/2025.pdf output/picpay.ofx
+```
+
+The unified command accepts:
+- `--in`: input format
+- `--out`: output format
+- `--model`: institution/model identifier
+- `input_path`: source file
+- `output_path`: destination file
+
+Some converters may require extra options. Example for C6 credit card CSV:
+
+```bash
+poetry run statement-converter --in csv --out ofx --model c6 --due-date 2021-04-05 samples-local/c6/credit/Fatura_2021-04-05.csv output/c6-credit.ofx
+```
+
+Run `poetry run statement-converter --help` to see the supported combinations.
+
 Example converting a Banco do Brasil statement:
 
 ```bash
-./convert_bb_cp samples/bb-cp.csv output/bb-cp-converted.csv
+poetry run convert-bb-cp samples/bb-cp.csv output/bb-cp-converted.csv
 ```
 
 This will:

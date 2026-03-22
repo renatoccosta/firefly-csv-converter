@@ -115,5 +115,20 @@ def main() -> None:
     process_csv(args.input_path, args.output_path, args.due_date)
 
 
+def _run(args: argparse.Namespace) -> None:
+    process_csv(args.input_path, args.output_path, args.due_date)
+
+
+def register_converters(registry) -> None:
+    registry.register(
+        input_format="csv",
+        output_format="ofx",
+        model="c6-credit",
+        description="C6 cartao de credito CSV para OFX",
+        aliases=("c6",),
+        required_options=("due_date",),
+    )(_run)
+
+
 if __name__ == "__main__":
     main()

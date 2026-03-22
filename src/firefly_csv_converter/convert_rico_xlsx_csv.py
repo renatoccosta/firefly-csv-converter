@@ -27,5 +27,18 @@ def main():
 
         process_csv(input_file, output_file)
 
+
+def _run(args):
+    process_csv(args.input_path, args.output_path)
+
+
+def register_converters(registry):
+    registry.register(
+        input_format="xlsx",
+        output_format="csv",
+        model="rico",
+        description="Rico XLSX para CSV",
+    )(_run)
+
 if __name__ == "__main__":
     main()
