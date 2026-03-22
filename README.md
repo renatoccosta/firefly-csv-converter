@@ -9,6 +9,7 @@ The project provides customizable conversion scripts that handle recurring text 
 - Generating valid CSV output for Firefly III
 - Extracting PicPay statement transactions from text-based PDFs and generating OFX
 - Extracting VR statement transactions from text-based PDFs and generating OFX
+- Extracting PB payroll statement transactions from PDFs and generating OFX
 - Converting C6 credit card CSV invoices into OFX credit card statements
 
 ## Project Structure
@@ -84,6 +85,12 @@ Example converting an iFood PDF statement to OFX:
 
 ```bash
 poetry run convert-ifood-pdf-ofx samples-local/ifood/extrato.pdf output/ifood.ofx
+```
+
+Example converting a PB payroll PDF to OFX:
+
+```bash
+poetry run convert-pb-pdf-ofx "samples-local/pb/09746219-202507-Contracheque do M#s.pdf" output/pb.ofx
 ```
 
 Example converting a C6 credit card CSV invoice to OFX:

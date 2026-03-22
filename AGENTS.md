@@ -47,6 +47,7 @@
 - Use files in `samples/` for manual spot checks before introducing new fixtures unless the scenario cannot be represented by the existing samples.
 - Do not make versioned tests depend on files from `samples-local/`. That directory is not versioned and should be treated only as local parser-building input or for manual validation.
 - For parsers based on non-versioned sources such as PDFs in `samples-local/`, create synthetic fixtures in the tests that mimic the relevant layout, coordinates, colors, and text patterns with fictitious data.
+- Test fixtures and assertions must not hardcode personal data from real documents. Always anonymize names, identifiers, account numbers, and similar fields in versioned tests.
 - Be careful with formatting assertions:
   - decimal separator is often `,`
   - CSV delimiter is sometimes `;`
