@@ -119,6 +119,18 @@ statement-converter --model vr samples/vr output
 
 Run `statement-converter --help` to see the supported models.
 
+### Shell completion
+
+`statement-converter` supports TAB completion via `argcomplete`, including dynamic completion for `--model`.
+
+After installing/updating the project with Poetry, enable it in Bash with:
+
+```bash
+eval "$(register-python-argcomplete statement-converter)"
+```
+
+To make it persistent, add that line to your shell startup file such as `~/.bashrc`.
+
 Example converting a Banco do Brasil statement:
 
 ```bash

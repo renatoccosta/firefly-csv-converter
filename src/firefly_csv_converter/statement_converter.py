@@ -1,9 +1,16 @@
+# PYTHON_ARGCOMPLETE_OK
+
 import argparse
 import sys
 from collections.abc import Sequence
 from pathlib import Path
 
 from firefly_csv_converter.converter_registry import ConverterRegistry, ConverterSpec, registry
+
+try:
+    import argcomplete
+except ImportError:  # pragma: no cover - fallback for environments without the optional dependency installed yet
+    argcomplete = None
 
 
 def _available_combinations(converter_registry: ConverterRegistry) -> str:
@@ -17,6 +24,16 @@ def _available_combinations(converter_registry: ConverterRegistry) -> str:
             f"  - {spec.input_format} -> {spec.output_format} | model={spec.model} | {spec.description}{required}"
         )
     return "\n".join(lines)
+
+
+def _complete_model(prefix: str, parsed_args, **kwargs) -> list[str]:
+    del parsed_args, kwargs
+    if not registry.all():
+        _ensure_builtin_converters_loaded(registry)
+    candidates: list[str] = []
+    for spec in registry.all():
+        candidates.extend([spec.model, *spec.aliases])
+    return sorted(candidate for candidate in set(candidates) if candidate.startswith(prefix))
 
 
 def _ensure_builtin_converters_loaded(converter_registry: ConverterRegistry) -> None:
@@ -109,7 +126,11 @@ def build_argument_parser(converter_registry: ConverterRegistry = registry) -> a
     )
     parser.add_argument("input_path", type=Path, nargs="?")
     parser.add_argument("output_path", type=Path, nargs="?")
-    parser.add_argument("--model", help="Modelo/instituicao do conversor, por exemplo: picpay, pb, rico-ofx, c6-credit-csv.")
+    model_argument = parser.add_argument(
+        "--model",
+        help="Modelo/instituicao do conversor, por exemplo: picpay, pb, rico-ofx, c6-credit-csv.",
+    )
+    model_argument.completer = _complete_model
     parser.add_argument(
         "--due-date",
         dest="due_date",
@@ -156,6 +177,8 @@ def validate_args(
 def main(argv: Sequence[str] | None = None, converter_registry: ConverterRegistry = registry) -> int:
     _ensure_builtin_converters_loaded(converter_registry)
     parser = build_argument_parser(converter_registry)
+    if argcomplete is not None:
+        argcomplete.autocomplete(parser)
     argv = list(sys.argv[1:] if argv is None else argv)
 
     if not argv:

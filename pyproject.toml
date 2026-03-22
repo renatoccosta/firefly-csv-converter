@@ -6,7 +6,7 @@ authors = [{ name = "Renato Costa", email = "renato@ccosta.dev" }]
 readme = "README.md"
 license-files = ["COPYING"]
 requires-python = ">=3.11"
-dependencies = ["pandas (>=2.3.3,<3.0.0)", "openpyxl (>=3.1.5,<4.0.0)", "ofxparse (>=0.21,<0.22)", "pypdf (>=6.9.1,<7.0.0)", "cryptography (>=46.0.5,<47.0.0)"]
+dependencies = ["pandas (>=2.3.3,<3.0.0)", "openpyxl (>=3.1.5,<4.0.0)", "ofxparse (>=0.21,<0.22)", "pypdf (>=6.9.1,<7.0.0)", "cryptography (>=46.0.5,<47.0.0)", "argcomplete (>=3.6.3,<4.0.0)"]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

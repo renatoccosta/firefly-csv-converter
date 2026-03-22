@@ -16,6 +16,27 @@ def test_main_without_args_shows_help(capsys: pytest.CaptureFixture[str]):
     assert "Conversores disponiveis" in captured.out
 
 
+def test_model_completion_uses_registered_models(monkeypatch: pytest.MonkeyPatch):
+    test_registry = ConverterRegistry()
+
+    @test_registry.register(
+        input_format="pdf",
+        output_format="ofx",
+        model="vr",
+        description="Conversor fake para teste",
+        aliases=("vale-refeicao",),
+    )
+    def fake_handler(args):
+        del args
+
+    monkeypatch.setattr(statement_converter, "registry", test_registry)
+
+    completions = statement_converter._complete_model("v", None)
+
+    assert "vr" in completions
+    assert "vale-refeicao" in completions
+
+
 def test_main_routes_to_matching_converter(tmp_path: Path):
     calls: list[tuple[Path, Path]] = []
     test_registry = ConverterRegistry()
