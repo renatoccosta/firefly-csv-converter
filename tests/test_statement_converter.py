@@ -42,6 +42,35 @@ def test_main_routes_to_matching_converter(tmp_path: Path):
     assert calls == [(input_path, output_path)]
 
 
+def test_main_accepts_output_directory_for_single_file(tmp_path: Path):
+    calls: list[tuple[Path, Path]] = []
+    test_registry = ConverterRegistry()
+
+    @test_registry.register(
+        input_format="pdf",
+        output_format="ofx",
+        model="vr",
+        description="Conversor fake para teste",
+    )
+    def fake_handler(args):
+        calls.append((args.input_path, args.output_path))
+        args.output_path.write_text("ok", encoding="utf-8")
+
+    input_path = tmp_path / "extrato.pdf"
+    output_dir = tmp_path / "saida"
+    input_path.write_text("fake", encoding="utf-8")
+
+    exit_code = statement_converter.main(
+        ["--in", "pdf", "--out", "ofx", "--model", "vr", str(input_path), str(output_dir)],
+        converter_registry=test_registry,
+    )
+
+    expected_output = output_dir / "extrato.ofx"
+    assert exit_code == 0
+    assert calls == [(input_path, expected_output)]
+    assert expected_output.read_text(encoding="utf-8") == "ok"
+
+
 def test_main_reports_unknown_converter(capsys: pytest.CaptureFixture[str]):
     with pytest.raises(SystemExit) as excinfo:
         statement_converter.main(
@@ -89,3 +118,43 @@ def test_process_picpay_auto_falls_back_to_2024(monkeypatch: pytest.MonkeyPatch,
 
     assert calls == ["2025", "2024"]
     assert output_path.read_text(encoding="utf-8") == "ok"
+
+
+def test_main_processes_directory_and_continues_after_failures(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+):
+    test_registry = ConverterRegistry()
+    calls: list[tuple[str, str]] = []
+
+    @test_registry.register(
+        input_format="pdf",
+        output_format="ofx",
+        model="vr",
+        description="Conversor fake para teste",
+    )
+    def fake_handler(args):
+        calls.append((args.input_path.name, args.output_path.name))
+        if args.input_path.stem == "broken":
+            raise ValueError("arquivo corrompido")
+        args.output_path.write_text(f"convertido:{args.input_path.name}", encoding="utf-8")
+
+    input_dir = tmp_path / "entrada"
+    output_dir = tmp_path / "saida"
+    input_dir.mkdir()
+    (input_dir / "ok.pdf").write_text("ok", encoding="utf-8")
+    (input_dir / "broken.pdf").write_text("broken", encoding="utf-8")
+    (input_dir / "ignorar.txt").write_text("ignorar", encoding="utf-8")
+
+    exit_code = statement_converter.main(
+        ["--in", "pdf", "--out", "ofx", "--model", "vr", str(input_dir), str(output_dir)],
+        converter_registry=test_registry,
+    )
+
+    captured = capsys.readouterr()
+    assert exit_code == 1
+    assert calls == [("broken.pdf", "broken.ofx"), ("ok.pdf", "ok.ofx")]
+    assert (output_dir / "ok.ofx").read_text(encoding="utf-8") == "convertido:ok.pdf"
+    assert not (output_dir / "broken.ofx").exists()
+    assert "arquivo corrompido" in captured.err
+    assert "1 sucesso(s), 1 falha(s)" in captured.out

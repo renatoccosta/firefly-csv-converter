@@ -24,6 +24,76 @@ def _ensure_builtin_converters_loaded(converter_registry: ConverterRegistry) -> 
         converter_registry.load_package_converters("firefly_csv_converter")
 
 
+def _format_suffix(format_name: str) -> str:
+    return f".{format_name.casefold().replace('_', '-')}"
+
+
+def _is_directory_target(path: Path) -> bool:
+    return path.exists() and path.is_dir() or not path.exists() and not path.suffix
+
+
+def _collect_input_files(input_dir: Path, input_format: str) -> list[Path]:
+    suffix = _format_suffix(input_format)
+    return sorted(
+        path for path in input_dir.iterdir() if path.is_file() and path.suffix.casefold() == suffix
+    )
+
+
+def _resolve_output_file(input_file: Path, output_target: Path, output_format: str, batch_mode: bool) -> Path:
+    suffix = _format_suffix(output_format)
+
+    if batch_mode or _is_directory_target(output_target):
+        output_target.mkdir(parents=True, exist_ok=True)
+        return output_target / f"{input_file.stem}{suffix}"
+
+    return output_target
+
+
+def _build_run_args(args: argparse.Namespace, input_path: Path, output_path: Path) -> argparse.Namespace:
+    values = vars(args).copy()
+    values["input_path"] = input_path
+    values["output_path"] = output_path
+    return argparse.Namespace(**values)
+
+
+def _run_single_conversion(converter: ConverterSpec, args: argparse.Namespace, input_file: Path, output_file: Path) -> None:
+    converter.handler(_build_run_args(args, input_file, output_file))
+
+
+def execute_conversion(converter: ConverterSpec, args: argparse.Namespace) -> int:
+    if args.input_path.is_dir():
+        input_files = _collect_input_files(args.input_path, args.input_format)
+        if not input_files:
+            print(
+                f"Nenhum arquivo {_format_suffix(args.input_format)} foi encontrado em {args.input_path}.",
+                file=sys.stderr,
+            )
+            return 1
+
+        success_count = 0
+        failure_count = 0
+        for input_file in input_files:
+            output_file = _resolve_output_file(input_file, args.output_path, args.output_format, batch_mode=True)
+            try:
+                _run_single_conversion(converter, args, input_file, output_file)
+                success_count += 1
+            except Exception as exc:
+                print(f"Erro ao converter {input_file}: {exc}", file=sys.stderr)
+                failure_count += 1
+
+        print(f"Conversao em lote concluida: {success_count} sucesso(s), {failure_count} falha(s).")
+        return 0 if failure_count == 0 else 1
+
+    output_file = _resolve_output_file(args.input_path, args.output_path, args.output_format, batch_mode=False)
+    try:
+        _run_single_conversion(converter, args, args.input_path, output_file)
+    except Exception as exc:
+        print(f"Erro ao converter {args.input_path}: {exc}", file=sys.stderr)
+        return 1
+
+    return 0
+
+
 def build_argument_parser(converter_registry: ConverterRegistry = registry) -> argparse.ArgumentParser:
     _ensure_builtin_converters_loaded(converter_registry)
     parser = argparse.ArgumentParser(
@@ -68,11 +138,20 @@ def validate_args(
             "Use --help para ver as combinacoes suportadas."
         )
 
+    if not args.input_path.exists():
+        parser.error(f"o caminho de entrada nao existe: {args.input_path}")
+
     missing_options = [
         f"--{option.replace('_', '-')}" for option in converter.required_options if not getattr(args, option, None)
     ]
     if missing_options:
         parser.error(f"o conversor selecionado exige opcoes extras: {', '.join(missing_options)}")
+
+    if args.input_path.is_dir():
+        if args.output_path.exists() and not args.output_path.is_dir():
+            parser.error("quando input_path for um diretorio, output_path tambem deve ser um diretorio")
+        if not args.output_path.exists() and args.output_path.suffix:
+            parser.error("quando input_path for um diretorio, output_path deve apontar para uma pasta")
 
     return converter
 
@@ -88,8 +167,7 @@ def main(argv: Sequence[str] | None = None, converter_registry: ConverterRegistr
 
     args = parser.parse_args(argv)
     converter = validate_args(parser, args, converter_registry)
-    converter.handler(args)
-    return 0
+    return execute_conversion(converter, args)
 
 
 if __name__ == "__main__":

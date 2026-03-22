@@ -28,13 +28,15 @@ firefly-csv-converter/
 
 ## Installation
 
+### Development install with Poetry
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/renatoccosta/firefly-csv-converter.git
    cd firefly-csv-converter
    ```
 
-2. This project uses [Poetry](https://python-poetry.org/) to manage dependencies, build, install. Poetry should be installed with [PipX](https://pipx.pypa.io/stable/). Install PipX and Poetry:
+2. Install [Poetry](https://python-poetry.org/) with [PipX](https://pipx.pypa.io/stable/):
 
    ```bash
    sudo apt update
@@ -42,18 +44,58 @@ firefly-csv-converter/
    pipx install poetry
    ```
 
-3. Build/Install (Poetry takes care of venvs):
+3. Install the project and its dependencies:
 
    ```bash
-   poetry build
    poetry install
    ```
+
+4. Run commands either through Poetry:
+
+   ```bash
+   poetry run statement-converter --help
+   ```
+
+   or by activating the virtual environment first:
+
+   ```bash
+   source "$(poetry env info --path)/bin/activate"
+   statement-converter --help
+   ```
+
+### Install from distribution artifacts
+
+After building the project with `poetry build`, the `dist/` directory will contain a wheel (`.whl`) and a source distribution (`.tar.gz`).
+
+Install either artifact with `pip` in a Python environment:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install dist/firefly_csv_converter-0.1.2-py3-none-any.whl
+```
+
+or:
+
+```bash
+pip install dist/firefly_csv_converter-0.1.2.tar.gz
+```
+
+The console scripts declared in `pyproject.toml` are created automatically during installation. They can be called directly after the environment is activated, for example:
+
+```bash
+statement-converter --help
+convert-bb-cp --help
+```
+
+If you install with `pip --user`, make sure your user scripts directory, usually `~/.local/bin`, is in your `PATH`.
+
 ## Usage
 
 Unified CLI entry point:
 
 ```bash
-poetry run statement-converter --in pdf --out ofx --model picpay samples-local/picpay/2025-x/2025.pdf output/picpay.ofx
+statement-converter --in pdf --out ofx --model picpay samples-local/picpay/2025-x/2025.pdf output/picpay.ofx
 ```
 
 The unified command accepts:
@@ -66,15 +108,15 @@ The unified command accepts:
 Some converters may require extra options. Example for C6 credit card CSV:
 
 ```bash
-poetry run statement-converter --in csv --out ofx --model c6 --due-date 2021-04-05 samples-local/c6/credit/Fatura_2021-04-05.csv output/c6-credit.ofx
+statement-converter --in csv --out ofx --model c6-credit --due-date 2021-04-05 samples-local/c6/credit/Fatura_2021-04-05.csv output/c6-credit.ofx
 ```
 
-Run `poetry run statement-converter --help` to see the supported combinations.
+Run `statement-converter --help` to see the supported combinations.
 
 Example converting a Banco do Brasil statement:
 
 ```bash
-poetry run convert-bb-cp samples/bb-cp.csv output/bb-cp-converted.csv
+convert-bb-cp samples/bb-cp.csv output/bb-cp-converted.csv
 ```
 
 This will:
@@ -83,48 +125,6 @@ This will:
 * Clean and restructure the `Value` column
 * Add a `Type` column for `C` (credit) or `D` (debit)
 * Save the processed file in `output/`
-
-Example converting a PicPay PDF statement in the 2022-2024 layout to OFX:
-
-```bash
-poetry run convert-picpay-pdf-ofx-2024 samples-local/picpay/2022-2024/2024.pdf output/picpay-2024.ofx
-```
-
-Example converting a PicPay PDF statement in the 2025 layout to OFX:
-
-```bash
-poetry run convert-picpay-pdf-ofx-2025 samples-local/picpay/2025-x/2025.pdf output/picpay-2025.ofx
-```
-
-Example converting a VR PDF statement to OFX:
-
-```bash
-poetry run convert-vr-pdf-ofx samples-local/vr/2024.pdf output/vr-2024.ofx
-```
-
-Example converting an iFood PDF statement to OFX:
-
-```bash
-poetry run convert-ifood-pdf-ofx samples-local/ifood/extrato.pdf output/ifood.ofx
-```
-
-Example converting a PB payroll PDF to OFX:
-
-```bash
-poetry run convert-pb-pdf-ofx "samples-local/pb/09746219-202507-Contracheque do M#s.pdf" output/pb.ofx
-```
-
-Example converting a C6 credit card CSV invoice to OFX:
-
-```bash
-poetry run convert-c6-credit-csv-ofx samples-local/c6/credit/Fatura_2021-04-05.csv output/c6-credit.ofx --due-date 2021-04-05
-```
-
-Example converting a C6 credit card PDF invoice to OFX:
-
-```bash
-poetry run convert-c6-credit-pdf-ofx samples-local/c6/credit/2024-04.pdf output/c6-credit-pdf.ofx
-```
 
 ## Running Tests
 
