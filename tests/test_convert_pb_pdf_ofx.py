@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from firefly_csv_converter.convert_pb_pdf_ofx import parse_pdf, parse_row, parse_statement_text, process_pdf
+from statement_converter.convert_pb_pdf_ofx import parse_pdf, parse_row, parse_statement_text, process_pdf
 
 
 SYNTHETIC_TEXT = """PETRÓLEO BRASILEIRO S.A.

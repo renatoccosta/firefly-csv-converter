@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from firefly_csv_converter.convert_c6_credit_csv_ofx import (
+from statement_converter.convert_c6_credit_csv_ofx import (
     parse_csv,
     parse_due_date,
     process_csv,

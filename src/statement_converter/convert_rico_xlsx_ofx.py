@@ -3,8 +3,8 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from firefly_csv_converter._ofx_common import StatementData, StatementTransaction, build_ofx
-from firefly_csv_converter._rico_cc_common import RicoStatementRow, parse_statement
+from statement_converter._ofx_common import StatementData, StatementTransaction, build_ofx
+from statement_converter._rico_cc_common import RicoStatementRow, parse_statement
 
 
 def _posted_at(row: RicoStatementRow) -> datetime:

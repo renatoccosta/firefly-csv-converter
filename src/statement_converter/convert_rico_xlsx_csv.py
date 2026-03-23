@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 
-from firefly_csv_converter._rico_cc_common import parse_input_dataframe
+from statement_converter._rico_cc_common import parse_input_dataframe
 
 
 def parse_input(input_path: str | Path):

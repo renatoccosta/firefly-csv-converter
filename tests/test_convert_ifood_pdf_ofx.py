@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from firefly_csv_converter.convert_ifood_pdf_ofx import parse_pdf, process_pdf
+from statement_converter.convert_ifood_pdf_ofx import parse_pdf, process_pdf
 
 
 def test_parse_pdf_handles_real_ifood_sample():

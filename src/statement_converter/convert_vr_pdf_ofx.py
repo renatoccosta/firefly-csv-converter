@@ -6,7 +6,7 @@ from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
 
-from firefly_csv_converter._ofx_common import StatementData, StatementTransaction, build_ofx
+from statement_converter._ofx_common import StatementData, StatementTransaction, build_ofx
 
 
 DATETIME_PATTERN = re.compile(r"^\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2}$")

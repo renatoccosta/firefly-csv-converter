@@ -6,7 +6,7 @@ from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
 
-from firefly_csv_converter._ofx_common import (
+from statement_converter._ofx_common import (
     StatementData,
     StatementTransaction,
     build_credit_card_ofx,

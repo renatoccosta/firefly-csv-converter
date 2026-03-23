@@ -5,7 +5,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from firefly_csv_converter.convert_rico_xlsx_ofx import parse_input, process_ofx
+from statement_converter.convert_rico_xlsx_ofx import parse_input, process_ofx
 
 
 def _write_excel(path: Path, rows):

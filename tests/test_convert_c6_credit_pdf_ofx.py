@@ -2,7 +2,7 @@ import zlib
 from datetime import datetime
 from pathlib import Path
 
-from firefly_csv_converter.convert_c6_credit_pdf_ofx import (
+from statement_converter.convert_c6_credit_pdf_ofx import (
     infer_transaction_year,
     is_credit_transaction,
     parse_due_date,

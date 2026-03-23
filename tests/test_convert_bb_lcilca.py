@@ -1,7 +1,7 @@
 import csv
 import pytest
 from pathlib import Path
-from src.firefly_csv_converter.convert_bb_lc import parse_input
+from src.statement_converter.convert_bb_lc import parse_input
 
 SAMPLES_DIR = Path(__file__).parent.parent / "samples"
 

@@ -1,16 +1,16 @@
 # AGENTS.md
 
 ## Overview
-- This repository contains small Python 3.11+ converters that transform bank and brokerage exports into CSV files suitable for Firefly III import workflows.
-- The codebase is intentionally simple: each converter lives in its own module under `src/firefly_csv_converter/` and exposes a small CLI-oriented `main()` plus parsing and CSV writing helpers.
+- This repository contains small Python 3.11+ converters that transform bank and brokerage exports into normalized CSV or OFX files.
+- The codebase is intentionally simple: each converter lives in its own module under `src/statement_converter/` and exposes a small CLI-oriented `main()` plus parsing and file writing helpers.
 - Poetry is the source of truth for dependency management, virtual environment management, package execution, and test execution in this project.
 - Use the globally installed `poetry` binary. Do not create or bootstrap a project-local Poetry installation.
 
 ## Project Layout
-- `src/firefly_csv_converter/convert_bb_cp.py`: converts Banco do Brasil checking account CSV exports.
-- `src/firefly_csv_converter/convert_bb_lc.py`: extracts BB LC/LCI/LCA statement rows from plain text.
-- `src/firefly_csv_converter/convert_ourocard_ofx.py`: converts Ourocard OFX files using `ofxparse`.
-- `src/firefly_csv_converter/convert_rico_xlsx_csv.py`: converts Rico account spreadsheets using `pandas` and `openpyxl`.
+- `src/statement_converter/convert_bb_cp.py`: converts Banco do Brasil checking account CSV exports.
+- `src/statement_converter/convert_bb_lc.py`: extracts BB LC/LCI/LCA statement rows from plain text.
+- `src/statement_converter/convert_ourocard_ofx.py`: converts Ourocard OFX files using `ofxparse`.
+- `src/statement_converter/convert_rico_xlsx_csv.py`: converts Rico account spreadsheets using `pandas` and `openpyxl`.
 - `tests/`: pytest coverage for each converter, mostly focused on parser behavior and output formatting.
 - `samples/`: real example inputs used by tests and useful for manual verification.
 
@@ -66,7 +66,7 @@
 
 ## Known Repository Realities
 - The `README.md` still mentions shell commands like `./convert_bb_cp`, but the packaging configuration defines console scripts with hyphenated names. Prefer the `pyproject.toml` entry points as the source of truth unless you are explicitly fixing the documentation.
-- `pytest.ini` only sets `pythonpath = .`; imports in tests currently mix `src.firefly_csv_converter...` and `firefly_csv_converter...`. Be cautious when changing package layout or test invocation assumptions.
+- `pytest.ini` only sets `pythonpath = .`; imports in tests currently mix `src.statement_converter...` and `statement_converter...`. Be cautious when changing package layout or test invocation assumptions.
 - `poetry install` may occasionally have trouble installing the current project in editable mode on some environments, but `poetry run pytest` can still work. Treat Poetry as the required workflow unless the user explicitly asks to debug Poetry itself.
 - There is no `Makefile`, no CI config checked into the current workspace snapshot, and no existing `AGENTS.md` before this file.
 

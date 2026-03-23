@@ -1,7 +1,7 @@
 import argparse
 
-from firefly_csv_converter.convert_picpay_pdf_ofx_2024 import process_pdf as process_picpay_pdf_ofx_2024
-from firefly_csv_converter.convert_picpay_pdf_ofx_2025 import process_pdf as process_picpay_pdf_ofx_2025
+from statement_converter.convert_picpay_pdf_ofx_2024 import process_pdf as process_picpay_pdf_ofx_2024
+from statement_converter.convert_picpay_pdf_ofx_2025 import process_pdf as process_picpay_pdf_ofx_2025
 
 
 def process_pdf(input_path, output_path) -> None:

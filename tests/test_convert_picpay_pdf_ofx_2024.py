@@ -2,8 +2,8 @@ import zlib
 from datetime import datetime
 from pathlib import Path
 
-from firefly_csv_converter._ofx_common import StatementData, build_ofx
-from firefly_csv_converter.convert_picpay_pdf_ofx_2024 import (
+from statement_converter._ofx_common import StatementData, build_ofx
+from statement_converter.convert_picpay_pdf_ofx_2024 import (
     parse_pdf,
     process_pdf,
 )

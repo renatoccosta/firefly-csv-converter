@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 from pathlib import Path
 from datetime import date, datetime
-from firefly_csv_converter.convert_rico_xlsx_csv import parse_input
+from statement_converter.convert_rico_xlsx_csv import parse_input
 
 def _write_excel(path: Path, rows):
     # Write raw rows to an Excel file without a header (so header detection can run)

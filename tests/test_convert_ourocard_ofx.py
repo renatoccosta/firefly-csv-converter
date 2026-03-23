@@ -1,7 +1,7 @@
 import tempfile
 import os
 import csv
-from firefly_csv_converter.convert_ourocard_ofx import process_csv
+from statement_converter.convert_ourocard_ofx import process_csv
 
 # Sample minimal OFX content for test
 OFX_SAMPLE = """\

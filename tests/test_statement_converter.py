@@ -2,9 +2,9 @@ from pathlib import Path
 
 import pytest
 
-from firefly_csv_converter import statement_converter
-from firefly_csv_converter import convert_picpay_pdf_ofx as picpay_auto_converter
-from firefly_csv_converter.converter_registry import ConverterRegistry
+from statement_converter import statement_converter
+from statement_converter import convert_picpay_pdf_ofx as picpay_auto_converter
+from statement_converter.converter_registry import ConverterRegistry
 
 
 def test_main_without_args_shows_help(capsys: pytest.CaptureFixture[str]):

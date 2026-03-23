@@ -1,12 +1,12 @@
-# Firefly CSV Converter
+# Statement Converter
 
-Firefly CSV Converter is a Python utility designed to transform raw bank statements, credit card invoices, and other financial text files into clean CSV files ready for import into [Firefly III](https://www.firefly-iii.org/).
+Statement Converter is a Python utility designed to transform raw bank statements, credit card invoices, and other financial files into normalized CSV and OFX outputs.
 
-The project provides customizable conversion scripts that handle recurring text transformations such as:
+The project provides customizable conversion scripts that handle recurring transformations such as:
 - Regex-based text replacements
 - Column cleaning and restructuring
 - Splitting value and credit/debit markers
-- Generating valid CSV output for Firefly III
+- Generating normalized CSV output
 - Extracting PicPay statement transactions from text-based PDFs and generating OFX
 - Extracting VR statement transactions from text-based PDFs and generating OFX
 - Extracting PB payroll statement transactions from PDFs and generating OFX
@@ -15,7 +15,7 @@ The project provides customizable conversion scripts that handle recurring text 
 ## Project Structure
 
 ```
-firefly-csv-converter/
+statement-converter/
 ├── src/              # Package modules (conversion logic)
 ├── tests/            # Unit tests (pytest)
 ├── samples/          # Example input files
@@ -32,8 +32,8 @@ firefly-csv-converter/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/renatoccosta/firefly-csv-converter.git
-   cd firefly-csv-converter
+   git clone https://github.com/renatoccosta/statement-converter.git
+   cd statement-converter
    ```
 
 2. Install [Poetry](https://python-poetry.org/) with [PipX](https://pipx.pypa.io/stable/):
@@ -72,13 +72,13 @@ Install either artifact with `pip` in a Python environment:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install dist/firefly_csv_converter-0.1.2-py3-none-any.whl
+pip install dist/statement_converter-0.1.2-py3-none-any.whl
 ```
 
 or:
 
 ```bash
-pip install dist/firefly_csv_converter-0.1.2.tar.gz
+pip install dist/statement_converter-0.1.2.tar.gz
 ```
 
 The console scripts declared in `pyproject.toml` are created automatically during installation. They can be called directly after the environment is activated, for example:
@@ -142,7 +142,7 @@ This will:
 * Read the original `bb-cp.csv`
 * Clean and restructure the `Value` column
 * Add a `Type` column for `C` (credit) or `D` (debit)
-* Save the processed file in `output/`
+* Save the normalized file in `output/`
 
 ## Running Tests
 

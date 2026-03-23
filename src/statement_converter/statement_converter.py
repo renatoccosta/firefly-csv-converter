@@ -5,7 +5,7 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-from firefly_csv_converter.converter_registry import ConverterRegistry, ConverterSpec, registry
+from statement_converter.converter_registry import ConverterRegistry, ConverterSpec, registry
 
 try:
     import argcomplete
@@ -38,7 +38,7 @@ def _complete_model(prefix: str, parsed_args, **kwargs) -> list[str]:
 
 def _ensure_builtin_converters_loaded(converter_registry: ConverterRegistry) -> None:
     if converter_registry is registry:
-        converter_registry.load_package_converters("firefly_csv_converter")
+        converter_registry.load_package_converters("statement_converter")
 
 
 def _format_suffix(format_name: str) -> str:

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from pypdf import PdfReader
 
-from firefly_csv_converter._ofx_common import (
+from statement_converter._ofx_common import (
     StatementData,
     StatementTransaction,
     build_ofx,
