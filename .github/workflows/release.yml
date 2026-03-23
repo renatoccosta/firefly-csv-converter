@@ -2,11 +2,11 @@ name: Build and Release
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
 
 permissions:
-  contents: write   # 🔑 necessário para criar e atualizar releases
+  contents: write
 
 jobs:
   build-and-release:
@@ -15,42 +15,66 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Verify tag matches pyproject.toml version
-        id: version_check
+      - name: Read version from pyproject.toml
+        id: version_info
         run: |
-          TAG_VERSION="${GITHUB_REF##*/}"
-          TAG_VERSION="${TAG_VERSION#v}"
           FILE_VERSION=$(grep -E '^version *= *' pyproject.toml | head -1 | cut -d '"' -f2)
+          TAG_NAME="v${FILE_VERSION}"
 
-          echo "Tag version: $TAG_VERSION"
           echo "File version: $FILE_VERSION"
+          echo "Tag name: $TAG_NAME"
 
-          if [ "$TAG_VERSION" != "$FILE_VERSION" ]; then
-            echo "::error::Tag version ($TAG_VERSION) does not match pyproject.toml version ($FILE_VERSION)."
+          if [ -z "$FILE_VERSION" ]; then
+            echo "::error::Could not determine version from pyproject.toml."
             exit 1
           fi
 
+          echo "file_version=$FILE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Check whether release tag already exists
+        id: tag_check
+        run: |
+          TAG_NAME="${{ steps.version_info.outputs.tag_name }}"
+
+          if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+            echo "Tag $TAG_NAME already exists. Release will be skipped."
+            echo "tag_exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Tag $TAG_NAME does not exist yet. Release will be created."
+            echo "tag_exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Install Poetry
+        if: steps.tag_check.outputs.tag_exists == 'false'
         run: |
           pip install poetry
 
       - name: Install dependencies
+        if: steps.tag_check.outputs.tag_exists == 'false'
         run: |
           poetry install
 
       - name: Build package
+        if: steps.tag_check.outputs.tag_exists == 'false'
         run: |
           poetry build
 
       - name: Create GitHub Release
+        if: steps.tag_check.outputs.tag_exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.version_info.outputs.tag_name }}
+          target_commitish: ${{ github.sha }}
+          name: Release ${{ steps.version_info.outputs.tag_name }}
           files: |
             dist/*
         env:

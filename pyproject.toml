@@ -1,6 +1,6 @@
 [project]
 name = "statement-converter"
-version = "0.1.2"
+version = "0.2.0"
 description = "Tools to convert and clean financial statements into normalized CSV and OFX outputs."
 authors = [{ name = "Renato Costa", email = "renato@ccosta.dev" }]
 readme = "README.md"
