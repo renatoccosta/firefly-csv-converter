@@ -8,6 +8,7 @@ The project provides customizable conversion scripts that handle recurring trans
 - Splitting value and credit/debit markers
 - Generating normalized CSV output
 - Extracting PicPay statement transactions from text-based PDFs and generating OFX
+- Extracting Banco do Brasil checking-account statement transactions from PDFs and generating OFX
 - Extracting VR statement transactions from text-based PDFs and generating OFX
 - Extracting PB payroll statement transactions from PDFs and generating OFX
 - Converting C6 credit card CSV invoices into OFX credit card statements
@@ -86,6 +87,7 @@ The console scripts declared in `pyproject.toml` are created automatically durin
 ```bash
 statement-converter --help
 convert-bb-cp --help
+convert-bb-cc-pdf-ofx --help
 ```
 
 If you install with `pip --user`, make sure your user scripts directory, usually `~/.local/bin`, is in your `PATH`.
