@@ -11,6 +11,7 @@ The project provides customizable conversion scripts that handle recurring trans
 - Extracting Banco do Brasil checking-account statement transactions from PDFs and generating OFX
 - Extracting VR statement transactions from text-based PDFs and generating OFX
 - Extracting PB payroll statement transactions from PDFs and generating OFX
+- Extracting Rico "Conta Antiga" statement transactions from PDFs and generating OFX
 - Converting C6 credit card CSV invoices into OFX credit card statements
 
 ## Project Structure

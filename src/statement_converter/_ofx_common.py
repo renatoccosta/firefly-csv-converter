@@ -44,11 +44,11 @@ def transaction_type(amount: Decimal) -> str:
     return "DEBIT" if amount < 0 else "CREDIT"
 
 
-def fit_id(transaction: StatementTransaction) -> str:
+def fit_id(transaction: StatementTransaction, sequence: int) -> str:
     cents = int((abs(transaction.amount) * 100).quantize(Decimal("1")))
     memo_slug = re.sub(r"[^A-Z0-9]+", "", transaction.memo.upper())[:12] or "TXN"
     sign = "D" if transaction.amount < 0 else "C"
-    return f"{format_ofx_timestamp(transaction.posted_at)}-{sign}-{cents}-{memo_slug}"
+    return f"{format_ofx_timestamp(transaction.posted_at)}-{sign}-{cents}-{memo_slug}-{sequence:06d}"
 
 
 def build_ofx(statement: StatementData) -> str:
@@ -65,7 +65,7 @@ def build_ofx(statement: StatementData) -> str:
         ledger_balance = Decimal("0.00")
 
     transaction_blocks = []
-    for transaction in statement.transactions:
+    for index, transaction in enumerate(statement.transactions, start=1):
         transaction_blocks.append(
             "\n".join(
                 [
@@ -73,7 +73,7 @@ def build_ofx(statement: StatementData) -> str:
                     f"<TRNTYPE>{transaction_type(transaction.amount)}",
                     f"<DTPOSTED>{format_ofx_timestamp(transaction.posted_at)}",
                     f"<TRNAMT>{transaction.amount:.2f}",
-                    f"<FITID>{fit_id(transaction)}",
+                    f"<FITID>{fit_id(transaction, index)}",
                     f"<NAME>{transaction.name or transaction.memo}",
                     f"<MEMO>{transaction.memo}",
                     "</STMTTRN>",
@@ -150,7 +150,7 @@ def build_credit_card_ofx(statement: StatementData, balance_as_of: datetime) -> 
         ledger_balance = Decimal("0.00")
 
     transaction_blocks = []
-    for transaction in statement.transactions:
+    for index, transaction in enumerate(statement.transactions, start=1):
         transaction_blocks.append(
             "\n".join(
                 [
@@ -158,7 +158,7 @@ def build_credit_card_ofx(statement: StatementData, balance_as_of: datetime) -> 
                     f"<TRNTYPE>{transaction_type(transaction.amount)}",
                     f"<DTPOSTED>{format_ofx_timestamp(transaction.posted_at)}",
                     f"<TRNAMT>{transaction.amount:.2f}",
-                    f"<FITID>{fit_id(transaction)}",
+                    f"<FITID>{fit_id(transaction, index)}",
                     f"<NAME>{transaction.name or transaction.memo}",
                     f"<MEMO>{transaction.memo}",
                     "</STMTTRN>",
